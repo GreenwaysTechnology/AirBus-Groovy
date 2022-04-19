@@ -2007,4 +2007,491 @@ Q.2.find Grade for given score
  
  less THAN 50 - F 
 ............................................................................................
+				Groovy Scripting - methods
+...........................................................................................	-collection of variables and methods(functions).
+
+How scripts are working?
+
+ When we write script , groovy creates a class "ScriptClass" , will have main method and run method.
+ The name of the script file  will go as name of the script class name.
+
+eg:
+
+Written by you?
+
+ HelloWorld.groovy
+
+ println "Hello Script"
+
+Groovy will write like below
+
+class HelloWorld extends Script{
+
+    //method called run
+    def run(){
+      println "Hello Script"
+   }
+ 
+ static void main(String[]args){
+  
+      InvokerHelper.runScript(HelloWorld,args)
+ }
+
+}
+methods:
+........
+
+-methods are going to group biz/application logic.
+
+
+Syntax:
+
+ 1.static typed syntax ; looks like a java syntax
+
+   returntype methodName(args){
+     //method body
+     return statement
+   }
+   void sayHello(){ 
+
+
+   }
+2. dynamic typed syntax
+
+    def methodName(args){
+      //method body
+    }
+
+
+eg;
+Static Typed:Java Style
+//methods : group biz logic
+
+//static typed methods - style of static typed methods
+//method declaration
+void sayHello() {
+    println("Hello Java Style")
+}
+//method invocation
+sayHello();
+
+//parameters and args
+
+//name, message are args
+void sayWelcome(String name, String message) {
+    println("$message $name")
+}
+
+sayWelcome("Subramanian", "Hello") // parameters
+//sayWelcome("Subramanian",34) // //wrong
+
+//if method returns values
+int add(int a, int b) {
+    int c = a + b
+    //return a + b // you are sending output to outside method
+    return c
+}
+
+int result = add(10, 10) //  calling method
+println("The add Result is $result")
+
+//Return string
+String getName() {
+    return "Subramanian"
+}
+
+String name = getName()
+println(name)
+//biz logic with return
+boolean login(String name, String password) {
+    if (name == "admin" && password == "admin") {
+        return true
+    }
+    return false
+}
+
+boolean isValid = login("admin", "admin")
+if (isValid) {
+    println("Login success")
+} else {
+    println("Login Failed")
+}
+//using tenary operator
+isValid ?  println("Login success") :  println("Login Failed")
+
+login("foo", "foo") ? println("Login success") : println("Login Failed")
+.............................................................................................
+			Dynamic Typed methods-parameters and args
+.............................................................................................
+//Groovy Style methods : dynamic typed
+
+def sayHello(){
+    println("Hello Groovy method")
+}
+sayHello()
+//args and parameters : args are style strong typing
+def sayWelcome(String name,String message){
+    println("$message $name")
+}
+sayWelcome("Subramanian","Hello")
+//args and parameters with dynamic typed
+def sayHai(def name){
+   println("Hai $name")
+}
+sayHai("Subramanian")
+//with def keyword
+def doStuff_(def myvar){
+    println("My Variable value is $myvar")
+}
+//without def keyword also valid
+def doStuff(myvar){
+    println("My Variable value is $myvar")
+}
+//you can pass any type of value
+doStuff("I am passing string")
+doStuff(1000)
+doStuff(10.78)
+doStuff(true)
+doStuff() //no value means null
+
+///drawbacks or trade off dynamic typed parameters
+def calculate(a,b){
+    def c = a * b
+    println("The Result is $c")
+}
+calculate(10,10)
+calculate(34.68,89.90)
+//calculate(true , false) // you will get runtime error
+..............................................................................................
+			  How to fill with default values
+//Groovy allows to skip parameters
+
+def sayHello_(String name) {
+    println("name $name")
+}
+
+def sayHello(name) {
+    println("name $name")
+}
+//passing parameters
+sayHello("Subramanian")
+//skip parameters
+sayHello()
+
+//what if i dont pass value, how to replace null with some meaningful values
+//default values
+def sayHai(name = "Foo") {
+    println("Hai $name")
+}
+
+sayHai("Ram")
+sayHai()
+
+def add_(int a = 0, int b = 0) {
+    int c = a + b
+    println("C is $c")
+}
+
+def add(Integer a = 0, Integer b = 0) {
+    int c = a + b
+    println("C is $c")
+}
+
+add(1, 3)
+add()
+//add("test")
+............................................................................................
+				Variable Args - VarArgs
+............................................................................................
+
+what if i want a method, that method must take n-number of args.
+ What if i pass more parameters, but i have less args.
+
+
+
+// i have method , but i has less args, dynamically i pass more parameters : VarArgs
+
+def log(String ...args){
+    println args
+}
+log('This is warning')
+log('This is warning','This is error','This is something')
+............................................................................................
+					
+				Method Return values and types
+.............................................................................................
+
+type method(){}
+
+def method(){}
+
+String sayHello() {
+    return 'Hello';
+}
+
+//def return values
+//def return values
+
+def sayHello() {
+    return "Hello"
+}
+
+println(sayHello())
+
+def getIntValue() {
+    return 100
+}
+
+println(getIntValue())
+
+def calculate_(int a = 0, int b = 0) {
+    return a + b  // expression
+}
+
+def calculate(int a = 0, int b = 0) {
+    return "The result is ${a + b}"  // expression
+}
+
+println(calculate(13, 90))
+
+//without return statement indicates that method by default returns
+
+String getName_() {
+    def firstName = 'Subramanian'
+    def lastName = 'Murugan'
+    def fullName = "$firstName $lastName"
+    //old style
+    return fullName
+}
+
+String getName() {
+    def firstName = 'Subramanian'
+    def lastName = 'Murugan'
+    def fullName = "$firstName $lastName"
+}
+
+println(getName())
+
+def getFullName() {
+    def firstName = 'Subramanian'
+    def lastName = 'Murugan'
+    def fullName = "$firstName $lastName"
+}
+
+println(getFullName())
+//return values with expressions and hardcoded values
+
+def getPrice() {
+    //here 100 to be returned
+    100
+}
+
+println(getPrice())
+
+def getTotalPrice() {
+    def qty = 100
+    def price = 900
+    qty * price
+}
+
+println(getTotalPrice())
+
+def iterate() {
+    for (def i = 0; i < 10; i++) {
+        println("I $i")
+    }
+}
+
+def value = iterate()
+println("Returned value is $value")
+//empty method
+def empty() {
+
+}
+
+def emptyResult = empty();
+println("Empty Method Result $emptyResult")
+
+//logic
+def login(String name = "", String password = "") {
+    (name == "admin") && (password == "admin")
+}
+
+login("admin", "admin") ? println("Login is Success") : println("Login is failed")
+login("admin", "foo") ? println("Login is Success") : println("Login is failed")
+
+//Receive the parameter and return the same
+def getStockvalue(stock) {
+    stock
+}
+println(getStockvalue(100))
+.............................................................................................
+			 Object oriented Programming and Implementation
+.............................................................................................
+
+Any PL deals two things
+
+1.Data
+2.methods/functions
+
+What can be data?
+ Numbers,Characters,booleans
+
+You can consider any thing as data.
+
+Program is collection of instructions (variables,expressions,literals,methods)
+
+can you consider method as data?
+
+ You may be thinking, No, data means need to be stored inside variable
+eg:
+ int a=10
+
+ can i store method inside variable? 
+   yes or no. 
+ Yes -that leads functional programming
+.............................................................................................
+
+OOP - is also one of the style of programming.
+
+According to oop, data and methods are encasulated under single unit called "Object"
+
+methods never be without data, data never be without methods
+
+methods operate on data.
+
+why methods operate on data?
+   They want to change the data.
+..............................................................................................
+				Object oriented Concepts
+.............................................................................................
+ 
+  data + methods
+
+Core concepts:
+1.State
+   Data
+2.Behaviour
+  methods
+
+1.Abstraction
+2.Encapsulation
+3.Modularity
+4.Hierachy
+5.Typing
+6.Persistency
+7.Concurrency
+.............................................................................................
+				  Abstraction
+.............................................................................................
+
+What is abstraction?
+   "Focus what is necessary ,Dont focus what is not necessary"
+
+The real world object may have been associated with million properties, but all properties not necessary for all types of domains.
+
+Filtering data according to domain which is called abstraction.
+
+Abstraction helps to capture right data for right domain.
+
+How to apply /map/ implement abstraction in programming languages?
+
+1.Compile Time/Source code
+
+ =>classes
+
+
+2.Runtime/Compiled  Code
+
+ =>Object
+
+What is class ?
+
+  It is container/unit to capture domain data.
+
+Task: Caputure employee details.
+
+Employee.groovy
+
+package com.airbus.oo.abstraction
+
+class Employee {
+    //state -data 
+    int id
+    String firstName
+    String lastName
+    double salary
+    String department
+    String role
+}
+
+
+int   a =      10;
+ |    |         |
+Type variable  value
+
+//Object Creation and syntax
+
+Employee employee = new     Employee()
+ |         |         |         |
+Type     Variable  keyword  constructor call
+
+Type classification:
+
+1.primitives - int,float...
+2.Reference type - Object type
+  Employee....
+
+Types of variables
+
+primtive variables - variables are declared with primitive types
+Reference variables -variables are declared with Reference types
+
+
+Object Properties
+    int id
+    String firstName
+    String lastName
+    double salary
+    String department
+    String role
+
+in order to access object properties,Groovy Offers object access operator.
+
+"." -  dot operator /  member access operator
+
+How to use this operator
+
+ referencevariable.property
+eg:
+ employee.id
+
+import com.airbus.oo.abstraction.Employee
+
+//Create Object
+
+//Static typed way of creating Object
+Employee employee = new Employee()
+//access object properties
+println("Employee Id : ${employee.id}")
+println("Employee FirstName  : ${employee.firstName}")
+println("Employee LastName : ${employee.lastName}")
+println("Employee Salary : ${employee.salary}")
+println("Employee Deparment : ${employee.department}")
+println("Employee Role : ${employee.role}")
+
+//Dynamic typed way of creating object
+def emp = new Employee()
+println("Employee Id : ${emp.id}")
+println("Employee FirstName  : ${emp.firstName}")
+println("Employee LastName : ${emp.lastName}")
+println("Employee Salary : ${emp.salary}")
+println("Employee Deparment : ${emp.department}")
+println("Employee Role : ${emp.role}")
+
+
+
+
+
+
 
