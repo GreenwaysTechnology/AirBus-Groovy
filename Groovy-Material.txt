@@ -2488,6 +2488,575 @@ println("Employee LastName : ${emp.lastName}")
 println("Employee Salary : ${emp.salary}")
 println("Employee Deparment : ${emp.department}")
 println("Employee Role : ${emp.role}")
+.............................................................................................
+				   Object
+.............................................................................................
+
+What is Object?
+
+There are two views:
+
+1.DOMAIN View /Realworld View
+  
+Object is tangable enity,you should able touch , feel, it.
+
+Can you describe "air" as object?
+ Yes,No
+can you describe "god" as object?   
+  Some people say there is god
+  Some people say there is no god
+Which is true?
+
+According to grady, "Object can be any thing/every thing,but that should be in the problem domain"
+
+eg:
+I am building software for weather forecasting system, in this system which primary entity?
+ "Air"
+According to weather forecasting system,"Air System".
+
+I am building banking software , in this domain "Air is not Object". 
+
+..............................................................................................
+
+object oriented analysis and design:
+
+Process:
+1.collect requirement - functional req
+2.design the system based on requirement
+  2.1.Identify the objects 
+      Banking 
+      	-Customer
+        -Account 
+        -Loan
+3.Apply abstraction
+   Customer - customerId/AccountNo, firstName,lastName,dob,mobileNo....
+
+4.Start coding 
+  Abstraction - classes
+
+class is a blue print of realworld Object
+.
+
+2.Program View    
+
+ In order to understand what is object in groovy/java?
+
+You need to understand some internals of JVM.
+
+What is JVM?
+   Process which hosts groovy/java apps
+
+
+ Employee emp = new Employee() ; // Object creation /Object instantation
+
+Object is memory, dynamic memory, allocated inside heap segment of JVM.
+
+new - operator , memory allocation 
+
+Employee employee=new Employee() - function call,method call
+  |         |
+Type        memory Handler - reference(pointer) variable
+
+..............................................................................................
+				 Object = State(data)  and Behaviour(methods)
+..............................................................................................
+
+How state is changed via methods?
+
+//src/Calculator.groovy
+package com.airbus.oo.abstraction
+
+class Calculator {
+    //state
+    int result
+    int a, b
+    //methods
+    int add(int a, int b) {
+        this.a = a
+        this.b = b
+        this.result = a + b
+        return result
+    }
+}
+
+src/CalculatorMain.groovy
+
+import com.airbus.oo.abstraction.Calculator
+def calc= new Calculator();
+def res = calc.add(10,10)
+println("The result is $res")
+.............................................................................................
+Reference variable:
+
+ Variable which points the address of object
+
+ def calc= new Calculator();
+here calc is reference variable
+
+Types of reference variable:
+
+1.custom reference variable
+
+ def calc= new Calculator();
+here calc is reference variable
+
+2.implicit reference variable
+ "this" -  implicit reference variable which points the object itself 
+ "super" - implicit reference variable which points the super object
+
+Types of variables;
+...................
+
+Types of variables can be classified according to various category.
+
+1.based on data type.
+  1.1.reference variable ... Employee,Calcuator...
+  1.2.primtive variables - int,float...
+
+2.based on where we have declared variable
+
+  2.1.inside class
+	with any type(reference/primitive),inside class are called as "instance variables"
+ eg :
+      int a;
+      String str;
+
+  2.2.inside class with one keyword(static)
+       with any type(reference/primitive),inside class with static keyword are called as "class variables/static variables"
+      static int a 
+      static String str
+
+
+  3.1.inside method
+      def doStuff(int b){
+         int a =0
+      }
+   here a and b are part of method -  called as "local variables"
+   
+ 
+When to use "this"?
+
+ int add(int a, int b ){ //local variables {
+        this.a = a // local variable a's value is assigned to instance variable
+        this.b = b
+       // a=a //lvalue requ
+        this.result = a + b
+        return result
+    }
+
+ here in order to avoid confusion to the compiler that lefside is instance variable and right side is local variable
+
+
+package com.airbus.oo.abstraction
+
+class Calculator {
+    //state
+    //instance variables
+    int result
+    int a, b //instance
+    //methods
+    int add(int a, int b ){ //local variables {
+        this.a = a // local variable a's value is assigned to instance variable
+        this.b = b
+       // a=a //lvalue requ
+        this.result = a + b
+        return result
+    }
+    //groovy syntax
+    def multiply(a=0,b=0){
+        a*b
+    }
+}
+
+import com.airbus.oo.abstraction.Calculator
+
+
+def calc= new Calculator();
+def res = calc.add(10,10)
+println("The result is $res")
+
+println(calc.multiply(10,10))
+println(calc.multiply())
+
+
+Note: all method syntax discussed as part of script, can be used inside class directly.
+..............................................................................................
+
+classes are in java language:
+
+1.class is used to represent object template.
+2.class contains variables and methods
+3.class can also contain another class,interfaces ; inner classes
+4.Every java program must start with class definition only.
+5.Every program can have mulitple java classes , but recommended is only one class per   file/program
+6.Every java program must have main method.
+
+Objects:
+
+1.Runtime representation of class we call "Object"
+2.Object means , memory representation of class.
+3.We can create more objects from a single class, but each object has its own memory address
+4.Object is pointed by a variable called "reference variable" ; pointer to object
+5.object contains methods, and variables called instance members.
+............................................................................................
+				 Groovy Beans
+............................................................................................
+
+Java Bean:
+  Java Object is other wise called as Java Bean
+
+-It is a standard  or spec for declaring a class and create object.
+
+Java Bean Spec:
+...............
+ How to declare class,fields(variables, methods)
+
+How to declare state(variables), and how to initalize them?
+
+1. inside class - hardcoded values
+
+package com.airbus.oo.objectinit;
+
+public class Product {
+    //state
+    int id =1;
+    String name="Phone";
+
+}
+   Product product = new Product();
+        System.out.println(product.id);
+        System.out.println(product.name)
+
+2. after object creation using reference variables
+public class Product {
+    int id;
+    String name;
+}
+        Product product = new Product();
+        //after object creation
+        product.id = 1;
+        product.name = "Phone";
+
+        System.out.println(product.id);
+        System.out.println(product.name);
+
+3. during object creation using "constructors"
+
+What is constructor?
+   It is special method like other methods.
+
+Features constructor:
+
+1.constructors are only used for initalization of state , not for holding biz logic
+2.constructors name should match class name.
+3.constructors may take arg 
+4.constructors never return any value.
+5.we can have many constructors inside single class to initalize the objects in different ways.
+
+package com.airbus.oo.objectinit;
+
+public class Product {
+    //state
+//    int id =1;
+//    String name="Phone";
+    int id;
+    String name;
+
+    //no arg - no arg constructor
+    public Product() {
+        this.id = 0;
+        this.name = "defaultProduct";
+    }
+
+    //with id and name
+    public Product(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Product(int id) {
+        this.id = id;
+        this.name = "defaultProduct";
+
+    }
+
+    public Product(String name) {
+        this.name = name;
+        this.id = 199;
+    }
+}
+package com.airbus.oo.objectinit;
+
+public class ObjectInitMain {
+    public static void main(String[] args) {
+//        Product product = new Product();
+//        System.out.println(product.id);
+//        System.out.println(product.name);
+
+//        Product product = new Product();
+//        //after object creation
+//        product.id = 1;
+//        product.name = "Phone";
+//
+//        System.out.println(product.id);
+//        System.out.println(product.name);
+
+        //using constructor
+        Product product = new Product();
+        System.out.println(product.id);
+        System.out.println(product.name);
+        //arg constructor
+        Product product1 = new Product(20,"Books");
+        System.out.println(product1.id);
+        System.out.println(product1.name);
+
+        Product product2 = new Product(30);
+        System.out.println(product2.id);
+        System.out.println(product2.name);
+
+        Product product3 = new Product("Food Items");
+        System.out.println(product3.id);
+        System.out.println(product3.name);
+    }
+}
+..............................................................................................
+			Object state initalization standards - java Bean standards
+.............................................................................................
+
+=> state variables should not be accessed outside class directly
+
+       Product product = new Product();
+       //which is not standard way of accessing variables
+       product.id = 1;
+       product.name = "Phone";
+
+state variables must be accessed via "accessor and mutatators - setters and getters"
+
+Setters and getters:
+=>methods are used to intialize and read instance variables.
+
+Setters Rules:
+
+1.should start with public
+public 
+2.method must have void return type
+3.method name must start with "set" convention
+ public void set
+4.method name must be name of the instance variable
+  public void setId
+4.method name must be camel Case - smallLetterUpperCase
+ public void setId()
+
+5.method must take arg which must match instance variable.
+public void setId(int id){
+        
+    }
+6.inside that method you have to initalize the instance variable using this keyword
+
+7.For every instance variable we must have "setter"
+
+8.All instance variables must be marked "private"
+
+
+getters : to read value
+
+1. start with public 
+2. method must return have type -  type of variable
+3. start with "get" + variable Name ->camelCase
+4. must not have any args
+5. must return instance variable
+
+package com.airbus.oo.objectinit;
+
+public class Product {
+    //state
+//    int id =1;
+//    String name="Phone";
+    private int id;
+    private String name;
+
+    //no arg - no arg constructor
+    public Product() {
+        this.id = 0;
+        this.name = "defaultProduct";
+    }
+
+    //with id and name
+    public Product(int id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Product(int id) {
+        this.id = id;
+        this.name = "defaultProduct";
+
+    }
+
+    public Product(String name) {
+        this.name = name;
+        this.id = 199;
+    }
+
+    //setters and getters -are used to read and write data.
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getId(){
+        return id;
+    }
+    public String getName(){
+        return name;
+    }
+
+}
+package com.airbus.oo.objectinit;
+
+public class ObjectInitMain {
+    public static void main(String[] args) {
+//        Product product = new Product();
+//        System.out.println(product.id);
+//        System.out.println(product.name);
+
+//        Product product = new Product();
+//        //after object creation
+//        product.id = 1;
+//        product.name = "Phone";
+//
+//        System.out.println(product.id);
+//        System.out.println(product.name);
+
+//        //using constructor
+//        Product product = new Product();
+//        System.out.println(product.id);
+//        System.out.println(product.name);
+//        //arg constructor
+//        Product product1 = new Product(20,"Books");
+//        System.out.println(product1.id);
+//        System.out.println(product1.name);
+//
+//        Product product2 = new Product(30);
+//        System.out.println(product2.id);
+//        System.out.println(product2.name);
+//
+//        Product product3 = new Product("Food Items");
+//        System.out.println(product3.id);
+//        System.out.println(product3.name);
+
+        Product product = new Product();
+        product.setId(1);
+        product.setName("Phone");
+        System.out.println("Id " + product.getId());
+        System.out.println("Name " + product.getName());
+    }
+}
+..............................................................................................
+
+package com.airbus.oo.objectinit;
+
+public class Patient {
+    private int id;
+    private String name;
+    private String city;
+    private String mobileNo;
+    private String email;
+
+    public Patient() {
+
+    }
+
+    public Patient(int id, String name, String city, String mobileNo, String email) {
+        this.id = id;
+        this.name = name;
+        this.city = city;
+        this.mobileNo = mobileNo;
+        this.email = email;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
+    }
+
+    public String getMobileNo() {
+        return mobileNo;
+    }
+
+    public void setMobileNo(String mobileNo) {
+        this.mobileNo = mobileNo;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    //setters and getters
+
+    //constructors
+}
+
+Patient patient = new Patient();
+        patient.setId(1);
+        patient.setName("Ram");
+        patient.setCity("Coimbatore");
+        patient.setEmail("ram@gmail.com");
+        patient.setMobileNo("99999999");
+        System.out.println(patient.getId() + " " + patient.getName() + " " + patient.getEmail());
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
