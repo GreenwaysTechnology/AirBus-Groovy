@@ -44,5 +44,10 @@ public class ObjectInitMain {
         patient.setEmail("ram@gmail.com");
         patient.setMobileNo("99999999");
         System.out.println(patient.getId() + " " + patient.getName() + " " + patient.getEmail());
+
+        Patient patient1 = new Patient(2, "John", "Delhi", "90008999", "john@foo.com");
+        System.out.println(patient1.getId() + " " + patient1.getName() + " " + patient1.getEmail());
+
+
     }
 }

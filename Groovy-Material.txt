@@ -3031,36 +3031,327 @@ Patient patient = new Patient();
         patient.setMobileNo("99999999");
         System.out.println(patient.getId() + " " + patient.getName() + " " + patient.getEmail());
     
+..............................................................................................
+/////////////////////////////////////////////////////////////////////////////////////
+
+setters vs constructors:
+
+Both recommened:
+
+1.Use setter once object is created. lazy initalization
+2.Use constructor during object creation; Eagar intialization
+//////////////////////////////////////////////////////////////////////////////////////////
+			Groovy and Object Oriented Programming
+
+1.Groovy uses Groovy Standards
+   ->Groovy Bean standards
+
+1.declare class
+2.create object
+
+package com.airbus.oo.groovybeans
+
+//by default groovy class is public classes
+class Message {
+    //state  // here variables must not be marked private,
+    // the reason groovy generates , setters and getters for us
+    String message
+    String to
+    String from
+    //can i declare the variables using def keyword : yes, but not recommended
+//    def message
+//    def to
+//    def from
+}
+import com.airbus.oo.groovybeans.Message
+
+def msg = new Message()
+//setters
+msg.message = "Hello" //groovy interally calls message.setMessage()
+msg.to = "John"
+msg.from = "Subramanian"
+//getters
+println("Message ${msg.message} ${msg.to} ${msg.from}")
+.............................................................................................
+			  Groovy Beans and Constructors
+.............................................................................................
+
+Groovy generates even constructors for us , you dont need to have constructors.
+
+Constructors are generated based on 'key:value' pair.
+
+//key:value ; key-instance variable; value ; variable value
+def msg1 = new Message(message: "Hai", to: "Foo", from: "Bar")
+println("Message ${msg1.message} ${msg1.to} ${msg1.from}")
+
+def msg2 = new Message(message: "welcome")
+println("Message ${msg2.message} ${msg2.to} ${msg2.from}")
+.............................................................................................
+				Object Operators:
+.............................................................................................
+
+1.Direct field access operator:
+
+ It is used to access fields
+
+field:
+  - It is an instance variable declared inside class
+
+
+"." - field access operator.
+    internally triggers getter
+".@" - field access operator.
+    if you want to access without getter.
 
 
 
+class Person {
+    int id;
+}
+
+def person = new Person(id:100);
+println person.id;
+
+person.id ----calls person.getId() => which calls getter method
+
+println person.@id -Which access id property directly
+.............................................................................................
+				Default Values for Object
+.............................................................................................
+
+values not initalized for an instance variable via  hardcoded inside class or even via setters or constructors or outside class.
 
 
+if you declare any variable whether it is primitive or reference inside a class.
+  Those variables are called as "instance variables".
+
+if you declare any variable whether it is primitive or reference inside a class with static keyword.
+  Those variables are called as "class  variables". static String varName=value
+
+Any variable has default value:
+
+integer family
+  0
+floating family
+ 0.0
+boolean family
+ false
+Reference types - String,Employee....
+ null
+
+class Person {
+    int id;
+    String name;
+    boolean  isActive;
+    double pointers;
+
+}
+
+def person = new Person();
+println person.id;
+println person.@id
+println person.name
+println person.isActive
+println person.pointers
+
+output:
+
+0
+0
+null
+false
+0.0
+..............................................................................................
+				    null
+
+What is null?
+    "It is also one of the value".
+It is assigned to a variable and its type should be reference type.
+null is assigned for an reference variable when the variables does not point valid memory address
+
+if you access any property based on null, "The jvm will throw the error called "NullPointerException", Your app will stop functioning.
+  
+
+package com.airbus.oo.groovy.nullvalues
+
+class Product {
+    int id
+    String name
+}
+import com.airbus.oo.groovy.nullvalues.Product
 
 
+//product variable here not pointing any valid memory address
+Product product=null
+println(product.id)
+
+//here you have initalized the variable called "product1 with valid Memory address"
+Product product1 = new Product()
+product1.id =1
+println(product1.id)
+
+Caught: java.lang.NullPointerException: Cannot get property 'id' on null object
+java.lang.NullPointerException: Cannot get property 'id' on null object
+	at NullMain.run(NullMain.groovy:6)
+	at java.base/jdk.internal.reflect.DirectMethodHandleAccessor.invoke(DirectMethodHandleAccessor.java:104)
+
+...........................................................................................
+				How to handle null in groovy
+...........................................................................................
+
+How to safely avoid NullpointerException?
+
+Groovy provides an operator called 
+
+ "safe navigation operator":
+      ?.
+
+eg:
+  person1?.name
 
 
+import com.airbus.oo.groovy.nullvalues.Product
 
 
+//product variable here not pointing any valid memory address
+Product product = null
+//println(product.id)
+//safe navigation operator will safely handle null errors
+//def res = product?.id
+//println("Result ${res}") //null
+//Product product = new Product(id:1000)
+
+if (product?.id) {
+    println(product.id)
+} else {
+    println("No Product Id")
+}
+//using tenary we can give default values
+
+println(product?.id ? product.id : 10)
+
+//using elvish we can give default values
+println(product?.id ?: 10)
 
 
+//here you have initalized the variable called "product1 with valid Memory address"
+Product product1 = new Product()
+product1.id = 1
+println(product1.id)
+..............................................................................................
+				Method Pointer Operator
+.............................................................................................
+The method pointer operator (.&) can be used to store a reference to a method in a variable.
+in order to call it later.
+
+package com.airbus.oo.groovy.methodreference
+
+class Greeter {
+    def sayHello(){
+        "Hello"
+    }
+}
+import com.airbus.oo.groovy.methodreference.Greeter
+
+def greeter= new Greeter()
+//method is called
+println(greeter.sayHello()) //direct method call
+
+//method can be stored inside variable and later it can be called.
+def hai = greeter.&sayHello
+println(hai())
+.............................................................................................
+			 Object DeStructuring
+
+In General How object properties are accessed?
+
+referencevariable.propertyName 
+
+ 
+Anthoer way of  Extracting object properties.
+
+Rules;
+-in order to implement object destructuring, getAt method must be given
+-returns variable type /def 
+-takes index as arg
+-write a logic to assign index  based properties
+package com.airbus.oo.groovy.objectdestructuring
+
+class Coordinates {
+    double latitutde;
+    double longitude;
+    //object destructing api
+    def getAt(int idx) {
+        if (idx == 0) latitutde
+        else if (idx == 1) longitude
+        else throw new Exception("Property not found")
+    }
+}
+
+import com.airbus.oo.groovy.objectdestructuring.Coordinates
+
+def coordinate = new Coordinates(latitutde: 12, longitude: 45)
+println(coordinate.latitutde)
+
+def (lat, lng) = coordinate
+println("$lat $lng")
+.............................................................................................
+				Encapsulation
+.............................................................................................
+
+It is a feature of OO, talks about , how to prevent code sharing.
 
 
+ It is a feature of OO, talks about , how to prevent code sharing.
+
+What is code :
+  collection of classes
+  class is having fields and methods, constructors
+
+In large application , we create many classes, we need to set some of rules how to share code.
 
 
+How to restrict code access?
+
+ java/groovy provides keywords 
+   -private,default,public,protected
+
+These keywords are used to control code sharing
+
+ private - means no body can access expect the current class
+ private is used for instance variables and instance methods.
 
 
+How to restrict code access?
+
+ java/groovy provides keywords 
+   -private,default,public,protected
+
+private - means no body can access expect the current class
+ private is used for instance variables and instance methods.
+
+In groovy:
+ private variables are not recommended to be treated as object fields.
+
+if you declare private, groovy wont generate setter and getters.
+private variables are by default converted into public.
+private methods are by default converted into public.
 
 
+if you tell, no setters and getters will be generated, if dont want setter and getter 
+you use public keyword.
+
+default: no modifer is told
+
+     String city; - public 
+
+protected: used inside inheritance
 
 
+classes are by default public without public keyword
 
+User.groovy  - scope is public
+class User{}
 
-
-
-
-
-
-
-
-
+User.java
+class User {} - scope is default-package level
