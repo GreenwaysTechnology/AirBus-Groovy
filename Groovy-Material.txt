@@ -3355,3 +3355,790 @@ class User{}
 
 User.java
 class User {} - scope is default-package level
+..............................................................................................
+				  Hierachy
+
+common Code sharing across the class and objects
+
+Types of hierachy
+
+1.has-a - composition
+2.is-a - inheritance
+
+
+
+HAS-A
+package com.airbus.oo.groovy.hasa
+
+class Address {
+    String street
+    String doorno
+    String city
+    String state
+    String zipcode
+}
+package com.airbus.oo.groovy.hasa
+
+class Customer {
+    int id
+    String firstName
+    String lastName
+    //has-a
+    Address address
+
+}
+package com.airbus.oo.groovy.hasa
+
+class Employe {
+    String empId
+    String empName
+    //has-a
+    Address address
+
+}
+
+//
+import com.airbus.oo.groovy.hasa.Address
+import com.airbus.oo.groovy.hasa.Customer
+
+def address = new Address(doorno: "10", street: "10th street", city: "Coimbatore", state: "TN", zipcode: "6632323")
+def customer = new Customer(id: 1, firstName: "Subramanian", lastName: "Murguan", address: address)
+println("${customer.firstName} ${customer.address.city}")
+
+//another syntax to attach objects
+def customer1 = new Customer(id: 1,
+        firstName: "Subramanian",
+        lastName: "Murguan",
+        address: new Address(doorno: "10", street: "10th street", city: "Coimbatore",
+                state: "TN", zipcode: "6632323"))
+println("${customer1.firstName} ${customer1.address.city}")
+.............................................................................................
+				  Inheritance - IS - A 
+...........................................................................................................................................................................................
+
+How to implement is-a(inheritance) in groovy?
+
+1.classes
+  concrete class
+  abstract class
+2.interfaces
+   similar to classes
+3.trait
+   similar to interfaces
+
+
+How to define parent and child? how to share code(data + method)
+
+Data sharing:
+.............
+
+
+concrete class: normal classes
+
+Parent class,Super class
+
+package com.airbus.oo.groovy.isa
+
+class Person {
+    String firstName
+    String lastName
+}
+
+//child class,dervied class,sub class
+
+package com.airbus.oo.groovy.isa
+
+//Employee is child of Person
+class Employee extends Person {
+   int empId
+}
+
+import com.airbus.oo.groovy.isa.Employee
+
+def emp = new Employee(empId: 1,firstName:"Subramanian",lastName: "Murugan" )
+println("${emp.empId} ${emp.firstName} ${emp.lastName}")
+
+protected;
+  It is modifier used for protecting variables and methods, can be used only with in the same class or its child class only.
+
+package com.airbus.oo.groovy.isa
+
+class Person {
+    //protected means the variables will be availble only within this class or inside class class
+    protected String firstName
+    protected String lastName
+}
+.............................................................................................
+				Method Sharing  -Typing
+.............................................................................................
+
+Parent class:
+package com.airbus.oo.groovy.isa.typing
+
+//base class
+class Vehicle {
+    //method
+    def startEngine() {
+        "Vehicle engine starts";
+    }
+}
+package com.airbus.oo.groovy.isa.typing
+
+class Car extends Vehicle{
+}
+
+import com.airbus.oo.groovy.isa.typing.Car
+
+def car = new Car()
+println(car.startEngine())
+
+output:
+Vehicle engine starts
+.............................................................................................
+				 Polymorphism
+.............................................................................................
+
+1.Runtime Polymorphsim
+
+Overriding: Giving different different algorthim for a method in dervied class
+
+ The over ride the base class method in dervied class.
+
+When ever we call a method , the Runtime sees a dervied class only. if method found in the 
+dervied class, then that method will be called.
+
+package com.airbus.oo.groovy.isa.typing
+
+//base class
+class Vehicle {
+    //method
+    def startEngine() {
+        "Vehicle engine starts";
+    }
+}
+
+
+package com.airbus.oo.groovy.isa.typing
+
+class Car extends Vehicle{
+    //override method
+    def startEngine() {
+        "Car engine starts";
+    }
+}
+package com.airbus.oo.groovy.isa.typing
+
+class Bus extends Vehicle{
+
+    //overriding
+    def startEngine() {
+        "Bus engine starts";
+    }
+}
+
+import com.airbus.oo.groovy.isa.typing.Bus
+import com.airbus.oo.groovy.isa.typing.Car
+
+def car = new Car()
+println(car.startEngine())
+
+def bus = new Bus()
+println(bus.startEngine())
+
+output:
+Car engine starts
+Bus engine starts
+
+
+Points:
+
+1. if the method is not found in the child class, parent class method is used
+2. if the method is foun in the child class, then child method is used.
+.............................................................................................
+			 The Type(data type and inheritance).
+		        (How dynamic typing is working under hood)
+				(How "def" keyword works)
+..............................................................................................
+			
+How Static Typing works?
+
+package com.airbus.oo.groovy.isa.typing;
+
+public class Animal {
+    public String eat() {
+        return "Animal eats both veg and meat";
+    }
+}
+package com.airbus.oo.groovy.isa.typing;
+
+public class Cat extends Animal{
+    @Override
+    public String eat() {
+        return "Cat drinks milk";
+    }
+}
+package com.airbus.oo.groovy.isa.typing;
+
+public class AnimalMain {
+    public static void main(String[] args) {
+        //Object creation syntax
+        //syntax -1
+        Cat cat  =new Cat();
+        System.out.println(cat.eat());
+    }
+}
+
+Reference variable declaration syntax:
+
+1.Type of the variable can be Same type of Object
+
+Cat cat = new Cat()
+
+2.The type of variable can be super type(Parent Type)
+
+Animal cat = new Cat()
+   Animal cat1 = new Cat();
+   System.out.println(cat1.eat());
+
+    "The type of variable can be the same type or super type".
+
+..............................................................................................
+
+Super Type and Methods in the derived type
+...........................................
+
+package com.airbus.oo.groovy.isa.typing;
+
+public class Cat extends Animal{
+    @Override
+    public String eat() {
+        return "Cat drinks milk";
+    }
+    //this is cat specific method
+    public String huntRats(){
+        return  "Cat Can Hunt rats";
+    }
+}
+ Animal cat1 = new Cat();
+        System.out.println(cat1.eat());
+        cat1.huntRats();
+
+Here you will get compile time error:
+   "Cannot resolve method 'huntRats' in 'Animal'"
+	
+Why this error?
+
+There are two phases in the code?
+
+1.compile time
+  compiler checks the code during compile time whether all expressions are valid.
+
+expressions are :
+ int a =10; here compiler verifies the whether is is compatiable to a.
+
+ Animal cat  = new Cat();
+ cat.huntRats(); here compiler verifies the whether this method part of "type-Animal"
+  "Whether this method is available in the Animal class or not", if not then compile time error
+
+how to fix this compile time error?
+ 
+ byte b =(byte)1000;
+ we need to apply type casting
+
+Cat catTemp = (Cat)cat1;
+catTemp.huntRats();
+
+2.runtime
+ 
+ During runtime, the jvm looks always right side(objects), method invocations are happing objects.
+..........................................................................................
+
+public class Animal {
+    public String eat() {
+        return "Animal eats both veg and meat";
+    }
+}
+
+Look at this code, do you think that , here Animal has any super class?
+ 
+you may tell , no. but there is default super class called "java.lang.Object" / groov.lang.Object"
+
+Every class in java and groovy has super most class is Object
+
+package com.airbus.oo.groovy.isa.typing;
+
+public class AnimalMain {
+    public static void main(String[] args) {
+        //Object creation syntax
+        //syntax -1
+        Cat cat  =new Cat();
+        System.out.println(cat.eat());
+        //syntax 2:
+        Animal cat1 = new Cat();
+        System.out.println(cat1.eat());
+        Cat catTemp = (Cat)cat1;
+        System.out.println(catTemp.huntRats());
+
+        //Syntax 3:
+        Object cat3 = new Cat();
+        Cat cat3Temp = (Cat)cat3;
+        cat3Temp.eat();
+        cat3Temp.huntRats();
+
+    }
+}
+.............................................................................................
+				How groovy achives dynamic typing
+
+
+def variable = new AnyClass();
+      |
+Object variable =new AnyClass();
+Groovy writes type casting code for us.
+..............................................................................................
+
+"super"
+   -It is variableName
+   -It POints the Object
+   -It points the Parent Object.
+   -super variable is created during object creation, points Parent always.
+  -every object has hidden implicit this pointer.
+
+package com.airbus.oo.groovy.isa.typing
+
+class Car extends Vehicle{
+    //override method
+    def startEngine() {
+        "Car engine starts" + super.startEngine()
+    }
+}
+.............................................................................................
+
+2.Compile time polymorphism
+
+ Compile time polymorphism is implemented using same type of reference variable.
+
+Overloading:
+
+ Having multiple copy of the same method with different parameter.
+
+Types of Compile time :
+
+1.method overloading
+2.constructor overloading
+3.operator overloading
+
+
+package com.airbus.oo.groovy.isa.typing.overriding
+
+class Calculator {
+    //different copy of the methods
+    //overloading
+    def add(int a = 0, int b = 0) {
+        a + b
+    }
+
+    def add(int a, int b, int c) {
+        a + b + c
+    }
+}
+
+import com.airbus.oo.groovy.isa.typing.overriding.Calculator
+
+def calc = new Calculator()
+println(calc.add(10,10))
+println(calc.add(3,8,9))
+............................................................................................
+
+package com.airbus.oo.groovy.isa.typing.overloading
+
+class Person {
+    int id
+    String name
+
+}
+//constructor overloading
+def person = new Person(id: 1, name: 'Test')
+def person2 = new Person(id: 1)
+def person3 = new Person(name: 'test')
+..............................................................................................
+				interfaces,abstract classes, trait
+.............................................................................................
+
+
+Interfaces:
+
+ -interfaces are classes;
+ -interfaces can have abstract methods.
+
+abstract method:
+ no implementation is provided. implementation provided by implementators who inherits the interfaces.
+
+  interfaces are used to share common code across multiple different family of classes
+  classes are used to share common code single family of classes
+
+
+package com.airbus.oo.groovy.isa.interfaces
+
+interface Flyable {
+    //only declaration
+    String fly()
+}
+package com.airbus.oo.groovy.isa.interfaces
+
+class Airplane implements Flyable{
+    @Override
+    String fly() {
+        return "AirPlane is flying"
+    }
+}
+
+package com.airbus.oo.groovy.isa.interfaces
+
+class Bird implements Flyable {
+    @Override
+    String fly() {
+        "Bird is flying"
+    }
+    //extra method
+    String buildNest(){
+        "Bird building Nest"
+    }
+}
+
+import com.airbus.oo.groovy.isa.interfaces.Airplane
+import com.airbus.oo.groovy.isa.interfaces.Bird
+import com.airbus.oo.groovy.isa.interfaces.Flyable
+
+def flyBehaviour = null
+//Flyable flyBehaviour =null
+//with Bird
+flyBehaviour = new Bird()
+println(flyBehaviour.fly())
+println(flyBehaviour.buildNest())
+//with AirPlane
+flyBehaviour = new Airplane()
+println(flyBehaviour.fly())
+............................................................................................
+				Types of Inheritance
+
+1.single inheritance 
+    one class can inherit only one class
+    groovy/java does not support multiple classes in heritance
+
+ class A extends B,C - invaild
+
+2.multiple inheritance
+   if you want to implement multiple , via interfaces
+
+  class A implements D, E {
+
+}
+
+package com.airbus.oo.groovy.isa.interfaces
+
+interface Eatable {
+  String eat()
+}
+
+package com.airbus.oo.groovy.isa.interfaces
+
+class Bird implements Flyable ,Eatable {
+    @Override
+    String fly() {
+        "Bird is flying"
+    }
+
+    @Override
+    String eat() {
+        return "Bird eats nuts"
+    }
+//extra method
+    String buildNest(){
+        "Bird building Nest"
+    }
+}
+
+def flyBehaviour = null
+//Flyable flyBehaviour =null
+//with Bird
+flyBehaviour = new Bird()
+println(flyBehaviour.fly())
+println(flyBehaviour.eat())
+println(flyBehaviour.buildNest())
+//with AirPlane
+flyBehaviour = new Airplane()
+println(flyBehaviour.fly())
+............................................................................................
+				Abstract class
+
+Abstract class   =interface + normal class
+
+ Abstract class contains abstract methods(declaration) and with implmentations
+
+package com.airbus.oo.groovy.isa.abstractclasses
+
+abstract class Animal {
+    //declaration
+    abstract String eat()
+    //implementation
+    String saveAnimals(){
+        "Save Animals from Hunters"
+    }
+}
+
+package com.airbus.oo.groovy.isa.abstractclasses
+
+class Tiger extends Animal{
+    @Override
+    String eat() {
+        return "Tiger eats meat"
+    }
+}
+package com.airbus.oo.groovy.isa.abstractclasses
+
+class Cow extends Animal {
+    @Override
+    String eat() {
+        return "Cow eats grass"
+    }
+}
+import com.airbus.oo.groovy.isa.abstractclasses.Cow
+import com.airbus.oo.groovy.isa.abstractclasses.Tiger
+
+def animal = null
+animal = new Tiger()
+println(animal.eat() + " " + animal.saveAnimals())
+
+animal = new Cow()
+println(animal.eat() + " " + animal.saveAnimals())
+............................................................................................
+				Trait - Advanced Interfaces
+............................................................................................
+
+What is trait?
+ Trait is similar as interface but very advanced interfaces.
+
+drawbacks of interfcases
+
+1.interfaces cant have implementation; but this feature added in java 8.
+
+
+Traits are a structural construct of the language which allows
+
+ -composition of behaviours
+ -runtime implementation of interfaces
+ -overriding
+ -supports static typing/compilation
+..............................................................................................
+
+Simple Trait:
+package com.airbus.oo.groovy.isa.traits
+
+trait Flyable {
+    //method implemenation
+    String fly() {
+        'I am flying'
+    }
+}
+package com.airbus.oo.groovy.isa.traits
+
+class Bird implements Flyable{
+}
+
+import com.airbus.oo.groovy.isa.traits.Bird
+import com.airbus.oo.groovy.isa.traits.Person
+
+def bird = new Bird()
+println(bird.fly())
+...........................................................................................
+
+package com.airbus.oo.groovy.isa.traits
+
+
+trait Greetable {
+    abstract String name();
+    String greeting() {
+        "Hello ${name()}"
+    }
+}
+
+package com.airbus.oo.groovy.isa.traits
+
+class Person implements Greetable{
+    @Override
+    String name() {
+        return "Subramanian"
+    }
+}
+def greetings= new Person();
+println(greetings.greeting())
+
+........................................................................................
+			 Dynamic binding of trait with classes
+
+if you want to attach trait with class there are two
+
+Way -1 : declare and attach via implements
+
+trait Greetable {
+    abstract String name();
+    String greeting() {
+        "Hello ${name()}"
+    }
+}
+class Person implements Greetable{
+    @Override
+    String name() {
+        return "Subramanian"
+    }
+}
+
+Way-2 declare and attach during runtime : loosly coupled pattern
+
+
+package com.airbus.oo.groovy.isa.traits
+
+trait Advanced {
+    String doStuff() {
+        'I am Dynamic'
+    }
+}
+
+
+//binding trait dynamically
+def machine = new Machine() as Advanced;
+println machine.doStuff()
+
+def flyingMachine = new Machine() as Flyable;
+println flyingMachine.fly()
+
+..........................................................................................
+				Attach more traits dynamically
+..........................................................................................
+
+
+def newMachine = new Machine()
+//attach features
+def newMachineWith = newMachine.withTraits(Advanced, Flyable)
+println(newMachineWith.fly() + " " + newMachineWith.doStuff())
+.............................................................................................
+				static variables and methods
+.............................................................................................
+
+How to share data across the application?
+
+ static variables and methods
+
+-static variables are not instance specific, can be shared across multiple instances
+
+
+
+instance variables and methods
+   variables and mehtod are declared inside class , can be accessed by that object only.
+
+static variables and methods
+  variables and mehtod are declared inside class with static keyword , can be accessed by  any object in the application.
+
+
+static variables:
+
+1.declare static variable inside class with any data type.
+2.variables are declared in capital letters.
+3.static keyword must be used infront of type
+4.public scope must be used 
+5.static variables must be initalized
+6.No setters and getters.
+
+7.How to access static variables?
+
+  Dont create Object
+
+ Access via
+  ClassName.variable
+
+8.static variables should not be re initalized other parts of the program.
+  
+add one more keyword - final : constant.
+
+
+package com.airbus.oo.groovy.staticinfo
+
+class Message {
+    static String INFO_MESSAGE = "info";
+    static final String WARN_MESSAGE = "Warn";
+    static final String ERROR_MESSAGE = "Error";
+    static final String SUCCESS_MESSAGE = "Success";
+}
+import com.airbus.oo.groovy.staticinfo.Message
+
+println(Message.ERROR_MESSAGE)
+println(Message.WARN_MESSAGE)
+println(Message.SUCCESS_MESSAGE)
+............................................................................................
+				DSL - Domain specific Language
+
+1.Functional Programming - Closure
+2.Collections - List,Map
+3.Groovy IO -  File Reading,writing,Json /XML Parsing
+.............................................................................................
+				Collections  -Data Structure
+.............................................................................................
+
+
+Array:
+  Collection of many times
+
+List :  
+ Collection of many items
+
+Array is static and fixed and List is dynamic
+
+int a =10 ; single item
+
+List:
+
+def numbers = [1, 2, 3, 4, 5, 9]
+def value = numbers.get(1)
+println(value)
+//how to read all value : for loop  , provide iterators are api to read values
+numbers.forEach(i -> println(i)) // functional programming is used ; java style
+
+numbers.each { i -> println(i) }
+//remote {
+//            url('https://github.com/jenkinsci/job-dsl-plugin.git')
+//          }
+
+.............................................................................................
+
+Map :
+
+ key : value datastructure
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
