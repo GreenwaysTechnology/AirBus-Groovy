@@ -1,16 +1,43 @@
-//Map with items
-def person = [
-        id  : 1,
-        name: 'Subramanian',
-        city: 'Coimbatore'
+//map
+
+def product = [
+        id   : 1,
+        name : 'Phone',
+        qty  : 100,
+        price: 10000.78
 ]
-println(person.city)
+//println(product.get(0))
+product.each { entry -> println(entry) }
 
-//Empty map:
-def items = [:]
-//later you can add values
-items.put("id", 10)
-items.put("qty", 9000)
-items.put("inStock", true)
+product.each { entry -> println("${entry.key} ${entry.value}") }
 
-println(items.get("inStock"))
+
+//nested Map
+def users = [
+        id    : 1,
+        name  : 'Subramanian',
+        skills: [
+                skillId: 100,
+                skill  : 'Groovy'
+        ]
+]
+//println("Skill Id" + users.get("skills").get("skillId"))
+//println("Skill Value" + users.get("skills").get("skill"))
+
+//users.each { entry ->
+//    {
+////        if (entry.key instanceof java.util.Map) {
+////            print("...")
+////        }
+//        println(entry.key + (entry.key instanceof java.util.Map) + " " + entry.value)
+//
+//    }
+//}
+
+print(".........")
+users.each {key,value->
+    println("${key} ${value}")
+    if(value instanceof  java.util.Map){
+        println(value.get("skillId") + value.get("skill"))
+    }
+}

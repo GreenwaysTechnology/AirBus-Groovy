@@ -4084,6 +4084,22 @@ println(Message.SUCCESS_MESSAGE)
 .............................................................................................
 				Collections  -Data Structure
 .............................................................................................
+There are three data structure:
+
+1.List
+   collection of items organized based on index
+  
+2.Set 
+   Collection of items organized based on "values natural order".
+
+List and set both are same
+  =>List allows duplicates values
+  =>Set never allows duplicates values
+
+3.Map
+  Two dimensional datastructure.
+  key-value pair datastructure
+
 
 
 Array:
@@ -4114,6 +4130,380 @@ numbers.each { i -> println(i) }
 Map :
 
  key : value datastructure
+.............................................................................................
+
+//Map with items
+//map
+
+def product = [
+        id   : 1,
+        name : 'Phone',
+        qty  : 100,
+        price: 10000.78
+]
+//println(product.get(0))
+product.each { entry -> println(entry) }
+
+product.each { entry -> println("${entry.key} ${entry.value}") }
+
+
+//map
+
+def product = [
+        id   : 1,
+        name : 'Phone',
+        qty  : 100,
+        price: 10000.78
+]
+//println(product.get(0))
+product.each { entry -> println(entry) }
+
+product.each { entry -> println("${entry.key} ${entry.value}") }
+
+
+//nested Map
+def users = [
+        id    : 1,
+        name  : 'Subramanian',
+        skills: [
+                skillId: 100,
+                skill  : 'Groovy'
+        ]
+]
+//println("Skill Id" + users.get("skills").get("skillId"))
+//println("Skill Value" + users.get("skills").get("skill"))
+
+//users.each { entry ->
+//    {
+////        if (entry.key instanceof java.util.Map) {
+////            print("...")
+////        }
+//        println(entry.key + (entry.key instanceof java.util.Map) + " " + entry.value)
+//
+//    }
+//}
+
+print(".........")
+users.each {key,value->
+    println("${key} ${value}")
+    if(value instanceof  java.util.Map){
+        println(value.get("skillId") + value.get("skill"))
+    }
+}
+..............................................................................................
+                                 DSL - Functional Programming
+............................................................................................
+
+What is functional programming?
+
+ Functional programming is the application/implementation of "Lambda Calculs".
+Functional programming:
+.......................
+
+Groovy is dynamic,object oriented , functional style programming languages.
+
+
+functional programming:
+
+functional programming invented by Alonzo Church
+
+In 1930 two computation models were proposed.
+
+
+State Machine/Turing Machine:
+  Turing machine is  also formal system in mathematical logic for expressing computation based on variable abstraction.
+
+Lambda calculus:
+   Lambda calculus (also written as λ-calculus) is a formal system in mathematical logic for expressing computation based on function abstraction and application using variable binding and substitution.
+
+      The functional programming is the reference implementation of lambda calculs.
+
+LISP is the first Programming language implemented "functional programming" / "Lambda Calculs".
+
+*********************************************************************************************
+Functional programming is application of lambda calculs mathetical theroy.
+
+
+Functional Programming principles:lambda calculs mathetical
+
+1.side effects
+2.Pure functions
+3.immutablity : referential transparency.
+4.function is the first class cizitens
+5.no loops, but recurrsion.
+6.Higher order function
+//////////////////////////////////////////////////////////////////////////////////////////////
+	    Groovy implements - Higher order function/function is first class citizen
+		
+..............................................................................................
+
+Function is value like others.
+
+int a =10;
+Employee emp  = new Employee();
+
+here 
+a is variable its value is no
+emp is variable its value is Employee Object
+
+you can declare variable, it can hold function as value - Function is first class citizen.
+
+Since function is value, it can be passed to another function as parameter , and can be returned from another function : Higher order function
+
+/////////////////////////////////////////////////////////////////////////////////////////////
+
+              Functional Programming concepts and implementation in Groovy
+				(Closures)
+.............................................................................................
+
+What is Closure?
+
+ The closure is object, used to implement functional programming in groovy.
+
+ The closure is an open , anonymous(nameless),block of code that can take arg,return a value
+and be assigned to a variable, can be passed as a parameter to another clousre or method.
+
+ closure is method /function.
+
+ "closure is free code"
+
+ "Closure is a literal" - value like 10 ,"hello" ,true, 
+
+Since closure is a literal, can be assigned to a variable,that variable can be used to invoke
+that closure(method/function)
+..............................................................................................
+
+   int a=10;
+
+Basic closure syntax:
+.....................
+
+def func = { code }
+
+func() // function invocation
+
+How to declare closure and invoke?
+
+//how to declare closure and initalize them
+
+def func = {
+    //function body
+    println("Hello , Closure")
+    println("Hello , Closure")
+    println("Hello , Closure")
+    println("Hello , Closure")
+    println("Hello , Closure")
+
+}
+//invoke closure
+func()
+............................................................................................
+//Groovy closure parameters and args
+
+//-> Arrow : which separates body of the function and args
+//Strong typing
+def add = null
+add = { int a, int b ->
+    def result = a + b
+    println("The Result is ${result}")
+}
+add(10, 10)
+
+//if you dont pass values
+add = { int a = 0, int b = 0 ->
+    def result = a + b
+    println("The Result is ${result}")
+}
+add()
+
+//dynamic parameters
+add = { def a = 0, def b = 0 ->
+    def result = a + b
+    println("The Result is ${result}")
+}
+add(5, 8)
+
+//dynamic parameters without even def keyword
+add = { a = 0, b = 0 ->
+    def result = a + b
+    println("The Result is ${result}")
+}
+add(5, 8)
+..............................................................................................
+					Single Args
+
+
+def sayHello = null;
+
+sayHello = { name -> println("Hello $name") }
+sayHello('Subramanian')
+
+implicit "single parameter called  it"
+
+"it" - it is keyword used to replace explicit single parameter.
+
+
+//single parameter
+def sayHello = null
+
+sayHello = { String name ->
+    println("Hello $name")
+}
+sayHello("Subramanian")
+
+sayHello = { name ->
+    println("Hello $name")
+}
+sayHello("Subramanian")
+
+//add it
+sayHello = { it ->
+    println("Hello $it")
+}
+sayHello("Subramanian")
+//without any explicit parameter
+sayHello = {println("Hello $it") }
+sayHello("Subramanian")
+............................................................................................
+				Returning values from the Closure
+.............................................................................................
+//How to return values from the groovy.
+def add = null;
+add = { a = 1, b = 2 ->
+    def result = a + b;
+    return result;
+}
+println(add(10, 10))
+//no return statement is needed.
+add = { a = 1, b = 2 ->
+    def result = a + b;
+    result;
+}
+println(add(10, 10))
+/////////////////////////////////////////////////////////////////////////////////
+// if you have single parameter and you want to return
+def getName = { it }
+println(getName('Ram'))
+
+............................................................................................
+				Closure Object
+............................................................................................
+
+//Generics
+Closure<Boolean> isOdd = {
+    it % 2 != 0 // return true or false
+}
+isOdd(3) ? println("Odd") : println("Even")
+//another way of calling closure
+isOdd.call(4) ? println("Odd") : println("Even")
+..............................................................................................
+				Higher order function
+.............................................................................................
+
+functions(closures) can be passed as parameter to another function(closure) or any object method.
+
+//Function as parameter
+
+//method takes String parameter
+def sayGreet(String name) {
+    println "$name"
+}
+//hardcode value
+sayGreet('Subramanian')
+def firstName = 'Subramanian';
+sayGreet(firstName);
+///////////////////////////////////////////////////////////////////////////////////////////////////
+//callback is just Variable going to hold function
+def connect(Closure<Void> callback) {
+    //call the variable
+    callback()
+}
+
+//passing closure variable
+def webServer = {
+    println "WebServer is connecting"
+}
+connect(webServer)
+//passing closure directly
+connect({
+    println "My another web Server"
+})
+//DSL code : Ommiting ()
+connect {
+    println "My another web Server "
+}
+///
+
+Higher orders and parameters and return
+
+
+void startWebServer(Closure<Void> callback) {
+    callback('Running') //single parameter
+}
+
+startWebServer {
+    println  "Weberver is $it"
+}
+
+............................................................................................
+void startWebServer(Closure<Void> callback) {
+    callback('Running') //single parameter
+}
+
+startWebServer {
+    println "Weberver is $it"
+}
+
+void job(Closure<Boolean> callback) {
+    def status = callback('job')
+    status ? println("job is running") : println("Job is not running")
+}
+
+job {
+    it == 'job' ? true : false
+}
+//////////////////////////////////////////////////////////////////////////////////////////////////
+//multi clsoure parameter
+void login(String name = "", String password = "", Closure<Void> resolve, Closure<Void> reject) {
+    (name == 'admin') && (password == 'admin') ? resolve('Login Success') : reject('Login failed')
+}
+
+//positional parameters
+login("admin", "admin", {
+    println it
+}, {
+    println it
+})
+login "foo", "bar", {
+    println it
+} {
+    println it
+}
+..............................................................................................
+				Closure Accepts another closure as arg
+.............................................................................................
+
+println "Closure as parameter to another closure"
+def auth = { userName, password, resolve, reject ->
+    if (userName.equals('admin') && password.equals('admin')) {
+        resolve('Login Success')
+    } else {
+        reject('Login failed')
+    }
+};
+auth('admin', 'admin', { println "$it" }, { println "$it" });
+
+//more dsl code, strings are enclosed within bracket and used common, but closure not necessary
+auth('admin', 'admin') { println "$it" } { println "$it" }
+
+
+
+
+
+
+
+
+
 
 
 

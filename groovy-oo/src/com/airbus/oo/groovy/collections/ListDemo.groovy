@@ -1,10 +1,11 @@
-def numbers = [1, 2, 3, 4, 5, 9]
-def value = numbers.get(1)
-println(value)
-//how to read all value : for loop  , provide iterators are api to read values
-numbers.forEach(i -> println(i)) // functional programming is used ; java style
+//List
+println("List")
+def list = [1, 2, 3, 4, 4, 5, 5]
+list.each { item -> println(item) }
 
-numbers.each { i -> println(i) }
-//remote {
-//            url('https://github.com/jenkinsci/job-dsl-plugin.git')
-//          }
+println("..................")
+
+println("Set")
+//Set
+def set = [1, 2, 3, 4, 5, 3, 4, 6, 5] as HashSet
+set.each { item -> println(item) }
