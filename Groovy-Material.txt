@@ -4495,6 +4495,511 @@ auth('admin', 'admin', { println "$it" }, { println "$it" });
 
 //more dsl code, strings are enclosed within bracket and used common, but closure not necessary
 auth('admin', 'admin') { println "$it" } { println "$it" }
+..............................................................................................
+				  Nested Closure
+..............................................................................................
+
+/**
+ * if you want to call inner closure
+ * 1.within outer closure
+ * 2.outside outer closure
+ */
+def outerClosure = {
+    println "Outer closure"
+    def innerClosure = {
+        println "Inner Clsoure"
+        def innerMostClosure = {
+            println "InnerMost Closure"
+        }
+        innerMostClosure()
+    }
+    innerClosure()
+}
+//calling outer class
+outerClosure()
+
+//calling from outside
+def outerClosure = {
+    println "Outer closure"
+    def innerClosure = {
+        println "Inner Clsoure"
+        def innerMostClosure = {
+            println "InnerMost Closure"
+        }
+    }
+}
+//calling from outside class
+outerClosure()()()
+.............................................................................................
+				Nested Closures and parameters - single args
+.............................................................................................
+
+//single params
+def outerClosure = {
+    println "Outer closure $it"
+    def innerClosure = {
+        println "Inner Clsoure $it"
+        def innerMostClosure = {
+            println "InnerMost Closure $it"
+        }
+    }
+}
+//calling from outside class
+outerClosure("Hello")("How are you")("Welcome")
+def multiArgsOuter = { String name, String message ->
+    println "Outer closure $name $message"
+    def multiArgsInner = { String nameOne = "one", String messageOne = "msg1" ->
+        println "Inner Clsoure $nameOne $messageOne"
+        def multiArgsInnerMost = { String nameTwo = "n2", String messageTwo = "msg2" ->
+            println "InnerMost Closure $nameTwo $messageTwo"
+        }
+    }
+}
+multiArgsOuter('Subramanian', 'Hello')()()
+
+..............................................................................................
+			return closure from method or another closure.
+.............................................................................................
+
+//def counter() {
+//    int a = 0;
+//    def innerClosure = {
+//        ++a; //closure returns value
+//    }
+//    return innerClosure;
+//}
+//Without Return Statement:
+//def counter() {
+//    int a = 0;
+//    def innerClosure = {
+//        ++a;
+//    }
+//}
+//without assigning closure
+def counter() {
+    int a = 0;
+    //This is invalid , because compiler understands that {} is function or scope syntax
+//    {
+//        ++a;
+//    }
+    //if you want to return clsoure without assigning you have to use return statement
+    return {
+        ++a;
+    }
+}
+
+def res = counter()
+println res()
+println res.call()
+println counter().call()
+
+//return closure from another closure
+
+def myCounter = {
+    int a = 0;
+    return {
+        ++a + it
+    }
+}
+println(myCounter().call(10))
+..............................................................................................
+				Closure are every where in groovy
+.............................................................................................
+
+Many apis are using closures - collections -  list,map,set....
+
+//List
+def list = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10];
+//process data in pipelines : Data process is done in stage by stage
+list.stream()
+        .filter { it % 2 == 0 } //filter even numbers
+        .map { it * 2 } //double it all even numbers
+        .each { println it }
+
+//i want to find out even numbers from 1 to 1000
+def longList = 1..1000 // .. here is range operator
+
+//find out even numbers ,find the first element
+longList.stream()
+        .filter { it % 2 == 0 }
+        .findFirst().orElse(0) // here if element is present return it else return default value 0
+        .each { println it }
+............................................................................................
+				 Closure Delegates
+...........................................................................................
+
+Groovy Meta Programming:
+   The Groovy language supports two flavors of metaprogramming: runtime and compile-time. The first allows altering the class model and the behavior of a program at runtime while the second only occurs at compile-time.
+
+
+Runtime Meta Programming:
+
+  The code which is running, generally cant be altered - Java
+  Groovy offers a mechanism that while running app /during runtime, we can alter the code
+  -Runtime Meta Programming
+This feature inspired from "Java Script". 
+
+  During runtime you can alter the object layout.
+
+ - adding new property /binding new Property on existing object
+ - Deleting property
+ - Updating property.
+ - Attach and detach Closures on Object dynamically - Closure Delegates
+
+eg
+ def greet = {
+
+ }
+
+I am creating new object called Hello,but greet is not part of Hello while declaring
+
+ class Hello {
+
+ }
+
+Here greet is not part of Hello, but some use cases i want greet inside Hello, i can bind greet closure with Hello dynamically, which is called "Closure delegates"
+
+Delegation:
+..........
+Dictionary meaning:
+ A person designated to act for  or represent another or others; deputy.
+
+Groovy and Delegate:
+....................
+
+Groovy language is dynamic language.
+
+As of now , we have discussed "dynamic nature of groovy with respect to type system".
+
+Groovy provides more dynamic programming features.
+
+-During runtime, we can do lot of things on object.
+   
+A.Dynamic binding of an closure to an Object.
+
+        "This is called delegation"
+
+..............................................................................................
+					Keywords in Closure
+.............................................................................................
+
+1.this
+2.owner
+3.delegate
+
+
+1.this keyword:
+   this inside closure , corresponds to the enclosing class where  the closure is defined.
+
+Where we can define closure?
+
+-inside script
+-inside groovy class
+
+-inside script
+
+closurethis.groovy
+def mycls = {
+    println this;
+}
+mycls()
+
+output: The class Name
+closurethis@490caf5f
+
+
+import org.codehaus.groovy.runtime.InvokerHelper;
+
+class closurethis extends Script {    
+                 
+    def run() {                                 
+  	println "hello";    
+        mycls()           
+    }
+     def mycls = {
+   	 println this;
+     }
+
+    static void main(String[] args) {           
+        InvokerHelper.runScript(HelloWorld, args)     
+    }
+}
+
+Note: any code if you write will go inside Script Class
+
+ -inside class:
+class HelloClosure {
+    def hello = {
+        println this
+    }
+}
+
+def myclass = new HelloClosure();
+myclass.hello()
+.............................................................................................
+
+2.owner :
+
+//owner
+def mycls = {
+    println "this : " + this;
+    println "Owner :"  + owner // who is controlling this closure
+}
+mycls()
+class Foo {
+    def myls = {
+        println "Foo "
+        println "this : " + this;
+        println "owner : " + owner;
+    }
+}
+def myclass = new Foo();
+myclass.myls()
+............................................................................................
+			  this vs owner
+.............................................................................................
+
+this  => corresponds to the "enclosing class where the closure is defined"
+owner => corresponds to the  "enclosing object where the closure is defined" which may be either another class or a closure.
+..............................................................................................
+			    Delegate 
+..............................................................................................
+
+The delegate of a closure can be accessed by the delegate property.
+ 
+Closure  "ownership" can be changed object to object.
+
+delegate property helps to bind closure with any object during runtime.
+def mycls = {
+    println "this : " + this;
+    println "Owner :" + owner // who is controlling this closure
+    println "Delegate : " + delegate
+}
+mycls()
+
+class Bar {
+    def myls = {
+        println "Bar "
+        println "this : " + this;
+        println "owner : " + owner;
+        println "Delegate : " + delegate
+
+    }
+}
+
+def myclass = new Bar();
+myclass.myls()
+..............................................................................................
+				How to change Owner of a closure / How to delegate
+.............................................................................................
+
+Closure Part of script:
+
+// if you want to delegate
+
+class Person {
+    String name
+}
+
+class Visitor {
+    String name
+}
+//define closure
+//def sayGreet = {
+//    println "this : " + this;
+//    println "owner : " + owner;
+//    println "Delegate : " + delegate
+//}
+def sayGreet = {
+    //how to access instance variables of object
+    delegate.name
+}
+def person = new Person(name: 'Subramanian')
+def visitor = new Visitor(name: 'Ram')
+//change Closure Relationship
+sayGreet.delegate = person
+println sayGreet()
+sayGreet.delegate = visitor
+println sayGreet()
+............................................................................................
+
+Closure inside Object , how to bind one Object of closure on to another object?
+
+class Util {
+    def add = {
+        delegate.a + delegate.b
+    }
+}
+
+def util = new Util()
+
+class Math {
+    int a;
+    int b
+}
+
+def math = new Math(a: 10, b: 20)
+util.add.delegate = math
+println util.add()
+..........................................................................................
+Delegation Strategy:
+....................
+
+lookup mechnism:
+
+
+eg:
+
+def upperCasedName = {
+    println "this : ${this}"
+    println "Owner : ${owner}"
+    println "Delegate : ${delegate}"
+    println("${name.toUpperCase()}")
+}
+upperCasedName()
+
+
+this : ClosureDelegeStrategy@69f1a286
+Owner : ClosureDelegeStrategy@69f1a286
+Delegate : ClosureDelegeStrategy@69f1a286
+Caught: groovy.lang.MissingPropertyException: No such property: name for class: ClosureDelegeStrategy
+groovy.lang.MissingPropertyException: No such property: name for class: ClosureDelegeStrategy
+	at ClosureDelegeStrategy$_run_closure1.doCall(ClosureDelegeStrategy.groovy:6)
+	at ClosureDelegeStrategy$_run_closure1.doCall(ClosureDelegeStrategy.groovy)
+	at ClosureDelegeStrategy.run(ClosureDelegeStrategy.groovy:8)
+
+///////////////////////////////////////////////////////////////////////////////////////////
+
+How to change the lookup order?
+
+Groovy first sees the method of owner, if not present, it will look up  in the delegate object.
+
+Closure writer = {
+    println "Owner $owner"
+    println "this $this"
+    println "delegate ${delegate}"
+    println append(it);
+}
+//script append method: writer's owner method
+def append(String str) {
+    "Fake append"
+}
+
+StringBuffer sb = new StringBuffer();
+//writer.resolveStrategy = Closure.DELEGATE_FIRST
+//writer.resolveStrategy = Closure.OWNER_FIRST
+writer.delegate = sb;
+writer('Hello')
+writer('Hello')
+writer('Hello')
+
+
+Default is "Owner First"
+//////////////////////////////////////////////////////////////////////////////////////////
+Closure.OWNER_FIRST ->lookup owner first, if not lookup delegate, if not ,will throw error
+Closure.DELEGATE_FIRST -> lookup delegate first, if not owner , if not will thorw error.
+Closure.OWNER_ONLY - lookup only in owner, if not , will throw error
+Clousre.DELEGATE_ONLY - lookup only in delegate , if not will throw error.
+////////////////////////////////////////////////////////////////////////////////////////////
+//Delegation Strategy: how to lookup the properties
+//def name = 'foo'
+//def upperCasedName = {
+//    println "this : ${this}"
+//    println "Owner : ${owner}"
+//    println "Delegate : ${delegate}"
+//    println("${name.toUpperCase()}")
+//}
+//upperCasedName()
+
+//script append method: writer's owner method
+def append(String str) {
+    "Fake append"
+}
+
+Closure writer = {
+    println "Owner $owner"
+    println "this $this"
+    println "delegate ${delegate}"
+    println append(it);
+}
+
+def greet(String message) {
+    "Greet $message"
+}
+
+def sayGreet = {
+    greet it
+}
+writer "Hai"
+println " ........"
+StringBuffer sb = new StringBuffer();
+//by default groovy looksup methods in the owner, if you want to change
+writer.resolveStrategy = Closure.DELEGATE_FIRST
+writer.delegate = sb
+writer "Hello"
+//First lookup sayGreet in the StringBuffer
+sayGreet.resolveStrategy = Closure.DELEGATE_FIRST
+sayGreet.delegate = sb
+println sayGreet("Hello")
+..............................................................................................
+				Compile Time Meta Programming
+..............................................................................................
+
+Compile-time meta Programming in groovy allows code generation at compile-time.
+Compiler generally generates a program (compiled program)  based on a concept "AST"
+Abstract Syntax Tree - tree representation of compiled program.
+
+Source code----compile----ast---executed.
+
+Groovy hooks AST Transformation during compilation process.
+
+When compare to Runtime meta programming, compile time meta programming will have changes in the byte itself -  eager process.
+
+Implementation:
+  AST transformation is done via "Annotations"
+
+@groovy.transform - package provides compile time meta programming instructions.
+import groovy.transform.ToString
+
+@ToString(includes = ['id', 'name'])
+class Employee {
+    Integer id
+    String name
+    Double salary
+}
+
+def emp = new Employee(id: 1, name: 'Subramanian', salary: 1000.78)
+println emp
+//println( emp.id + emp.name + emp.salary)
+..............................................................................................
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
